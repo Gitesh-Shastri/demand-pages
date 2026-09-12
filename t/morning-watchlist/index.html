@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Morning Watchlist — the overnight news that mentioned you. ₹2,499/month</title>
+<meta name="description" content="One page each morning with only the items that mentioned a competitor, customer, technology or regulation you watch. Grouped by the thing watched, with a log of the decisions it caused. ₹2,499 per team per month.">
+<meta name="robots" content="noindex">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    background:#11110f;color:#f2f0ea;
+    font:17px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    padding:36px 22px 56px;
+  }
+  main{max-width:520px;margin:0 auto}
+  h1{font-size:30px;line-height:1.2;letter-spacing:-.02em;font-weight:700}
+  .sub{margin-top:16px;color:#c9c5ba;font-size:18px}
+  ul{margin:26px 0 0;list-style:none}
+  li{padding:9px 0 9px 22px;position:relative;color:#e4e0d6;font-size:16px}
+  li:before{content:"";position:absolute;left:0;top:19px;width:9px;height:2px;background:#8a8578}
+  .price{margin:30px 0 0;font-size:34px;font-weight:700;letter-spacing:-.02em}
+  .price span{font-size:17px;font-weight:400;color:#c9c5ba}
+  .price small{display:block;margin-top:6px;font-size:15px;font-weight:400;color:#928d80}
+  .act{margin-top:28px}
+  button,input{font:inherit}
+  button{
+    width:100%;padding:16px;border:0;border-radius:10px;
+    background:#ff6a2b;color:#fff;font-size:18px;font-weight:600;cursor:pointer;
+  }
+  button:active{background:#e85c20}
+  input{
+    width:100%;padding:15px;border:1px solid #454136;border-radius:10px;
+    background:#1b1a16;color:#f2f0ea;margin-bottom:10px;
+  }
+  input:focus{outline:2px solid #ff6a2b;outline-offset:1px}
+  .honest{margin-top:14px;font-size:14px;line-height:1.45;color:#928d80}
+  .done{margin-top:28px;padding:16px;border:1px solid #454136;border-radius:10px;font-size:16px}
+  [hidden]{display:none}
+  @media(min-width:560px){h1{font-size:36px}body{padding-top:64px}}
+</style>
+</head>
+<body>
+<main>
+
+  <h1>You heard your competitor raised money from a customer, three weeks late.</h1>
+
+  <p class="sub">One page each morning holding only the items that mentioned something you watch &mdash; a competitor, a customer, a technology, the regulation you are waiting on. Everything else stays out.</p>
+
+  <ul>
+    <li>Grouped by the thing you watch, not by who published it, and every item says which term hit and whether it hit the headline or a passing mention.</li>
+    <li>Whole-word matching, so watching &ldquo;AI&rdquo; does not hand you every article containing &ldquo;Dubai&rdquo;. That is the difference between a page you open daily and one you stop opening.</li>
+    <li>Link an item to the decision it caused. In six months that log is the only record of why your company did what it did &mdash; and a free reader gives you bookmarks.</li>
+  </ul>
+
+  <p class="price">₹2,499<span>/month</span>
+    <small>Whole team. Add everyone; no per-seat maths.</small></p>
+
+  <div class="act">
+    <button id="get" type="button">Get it</button>
+
+    <form id="form" hidden novalidate>
+      <input id="email" type="email" name="email" inputmode="email" autocomplete="email"
+             placeholder="you@yourbusiness.com" aria-label="Your email" required>
+      <button type="submit">Notify me when it opens</button>
+    </form>
+
+    <p class="done" id="done" hidden>Got it. You&rsquo;ll be the first one in.</p>
+
+    <p class="honest">Not open yet &mdash; leave your email and you get it first.</p>
+  </div>
+
+</main>
+
+<script>
+(function(){
+  // Injected at deploy time from config/endpoint.json by scripts/deploy_page.py.
+  var CFG = /*ENDPOINT*/{"form_url": null, "entry_type": null, "entry_slug": null, "entry_email": null}/*ENDPOINT*/;
+  var SLUG = "morning-watchlist";
+
+  // Fire-and-forget. Never blocks the UI, never surfaces an error to a visitor.
+  function report(type, email){
+    try{
+      if(!CFG.form_url || !CFG.entry_type) return;
+      var fd = new FormData();
+      fd.append(CFG.entry_type, type);
+      fd.append(CFG.entry_slug, SLUG);
+      fd.append(CFG.entry_email, email || "");
+      fetch(CFG.form_url, {method:"POST", mode:"no-cors", body:fd}).catch(function(){});
+    }catch(e){}
+  }
+
+  report("visit", "");
+
+  var get = document.getElementById("get"),
+      form = document.getElementById("form"),
+      email = document.getElementById("email"),
+      done = document.getElementById("done");
+
+  get.addEventListener("click", function(){
+    get.hidden = true;
+    form.hidden = false;
+    email.focus();
+  });
+
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    var v = email.value.trim();
+    if(v.indexOf("@") < 1 || v.indexOf(".", v.indexOf("@")) < 0){ email.focus(); return; }
+    report("want", v);
+    form.hidden = true;
+    done.hidden = false;
+  });
+})();
+</script>
+</body>
+</html>
